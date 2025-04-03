@@ -233,7 +233,8 @@ let rec type_of tableofIDs tree =  match tree with
 | ConstFM (i, j, l) -> let rows = List.length l and cols = List.length (List.hd l) in 
                        if (rows == i && cols == j) then MatrixFlo(i, j)
                        else failwith (sprintf "Matrix has shape(%d,%d) but got (%d,%d)." i j rows cols)
-| ConstructIdent (s, t, e) -> let te = type_of tableofIDs e in ( 
+| ConstructIdent (s, t, e) -> let te = type_of tableofIDs e
+                            in ( 
                               match (te,t) with
                               | Bool,Bool -> let _ = addid tableofIDs s te in Controlok
                               | Integer, Integer -> let _ = addid tableofIDs s te in Controlok
@@ -245,8 +246,11 @@ let rec type_of tableofIDs tree =  match tree with
                               | Controlok, _ -> let _ = addid tableofIDs s t in Controlok
                               | _,_ -> failwith (sprintf "Identifier %s was declared to be of type %s but is being assigned an expression of type %s." s (type_to_string t) (type_to_string te));
                               )
-| AssignIdent (s, e) -> let te = (type_of tableofIDs e) in (
-                                let _ = mutateid tableofIDs s te in Controlok)
+| AssignIdent (s, e) -> (match e with 
+                          | Inp _  -> Controlok
+                          | _ -> (let te = type_of tableofIDs e 
+                                  in 
+                                  let _ = mutateid tableofIDs s te in Controlok))
 | Inp s -> type_of tableofIDs s
 | Out s -> (match s with 
           | LookupIdent(x) -> let _ = type_of tableofIDs s in Controlok

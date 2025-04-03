@@ -1,0 +1,4 @@
+fmatrix A := create_fmat(3,3);
+A := Input("fmatrA.txt");
+Print(A);
+A := Input();

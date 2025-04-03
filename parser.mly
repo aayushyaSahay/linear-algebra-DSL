@@ -78,8 +78,11 @@ declaration:
 
 assignment:
     | TokIDENT ASSIGN exp            { AssignIdent($1, $3) }
-    | TokIDENT LBRACKET exp RBRACKET ASSIGN exp { AssignVectorAtIndex($1,$3,$6) }
-    | TokIDENT LBRACKET exp RBRACKET LBRACKET exp RBRACKET ASSIGN exp { AssignMatAtIndex($1,$3,$6,$9) }
+    | TokIDENT ASSIGN input          { AssignIdent($1, $3) }
+    | TokIDENT LBRACKET exp RBRACKET ASSIGN exp   { AssignVectorAtIndex($1,$3,$6) }
+    | TokIDENT LBRACKET exp RBRACKET ASSIGN input { AssignVectorAtIndex($1,$3,$6) }
+    | TokIDENT LBRACKET exp RBRACKET LBRACKET exp RBRACKET ASSIGN exp   { AssignMatAtIndex($1,$3,$6,$9) }
+    | TokIDENT LBRACKET exp RBRACKET LBRACKET exp RBRACKET ASSIGN input { AssignMatAtIndex($1,$3,$6,$9) }
 //  either constant indexing or variable indexing, nothing other than that allowed.
 ;
 
@@ -106,12 +109,20 @@ for_stmt:
 ;
 
 io_stmt:
-    | INPUT LPAREN TokIDENT RPAREN              { Inp(LookupIdent($3)) }
-    | PRINT LPAREN TokIDENT RPAREN              { Out(LookupIdent($3)) }
-    | PRINT LPAREN TokSTRING RPAREN              { Out(ConstS($3)) }
+    | input                                     { $1 }
+    | output                                    { $1 }
     | EXIT                                      { Exit }
 ;
 
+input:
+    | INPUT LPAREN TokSTRING RPAREN             { Inp(ConstS($3))   }
+    | INPUT LPAREN RPAREN                       { Inp(NoOp) }
+;
+
+output:
+    | PRINT LPAREN TokIDENT RPAREN              { Out(LookupIdent($3)) }
+    | PRINT LPAREN TokSTRING RPAREN             { Out(ConstS($3)) }
+;
 exp:
     | TokBOOL                      { ConstB $1 }
     | TokINT                       { ConstI $1 }
@@ -127,7 +138,6 @@ exp:
     | unary_op                     { $1 }
     | func_op                      { $1 }
     | rel_op                       { $1 }
-    | INPUT LPAREN RPAREN          { Inp(NoOp) }
     | TokIDENT LBRACKET exp RBRACKET { LookVectAtIndex($1,$3) }
     | TokIDENT LBRACKET exp RBRACKET LBRACKET exp RBRACKET { LookMatAtIndex($1,$3,$6) }
 ;

@@ -235,12 +235,19 @@ let rec eval tableofIDs tree =  match tree with
                                 let _ = mutvaluID tableofIDs s te in Unit)
 | Inp s -> ( (* currently stdin supported, file support not there, might need to add a file handle in order to recognise the difference and read from a file instead *)
             match s with 
-            | LookupIdent(str) -> (
+            | ConstS str -> (
+                    let stripped_str = String.sub str 1 (String.length str - 2) in
+                    let input_channel = open_in stripped_str in
+                    let parsed_expr = Parser.exp Lexer.segmentar (Lexing.from_channel input_channel) in
+                    close_in input_channel;
+                    let _ = Ast.type_of [Hashtbl.create 16] parsed_expr in
+                    eval tableofIDs parsed_expr
+                )
+            | NoOp -> (
                     let input = read_line () in
                     let parsed_expr = Parser.exp Lexer.segmentar (Lexing.from_string input) in
                     let _ = Ast.type_of [Hashtbl.create 16] parsed_expr in
-                    let valu = eval tableofIDs parsed_expr in
-                    mutvaluID tableofIDs str valu
+                    eval tableofIDs parsed_expr
                 )
             | _ -> failwith (sprintf "How did it come through the type-checker to the Inp function?")
            )

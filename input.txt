@@ -1,6 +1,6 @@
 {
     fmatrix A := create_fmat(3,3);
-    Input(A);
+    A := Input("./Inputs/fmatrA.txt");
     fmatrix inverseA := create_fmat(3,3);
 
     if(det(A) != 0.0)then{
@@ -28,7 +28,7 @@
     }
 
     fmatrix somematr := create_fmat(2,2);
-    Input(somematr);
+    somematr := Input("./Inputs/somematr.txt");
     fmatrix inverseB := create_fmat(2,2);
 
     if(det(somematr) != 0.0)then{
@@ -56,7 +56,7 @@
     }
 
     fvector x := create_fvect(3);
-    Input(x);
+    x := Input("./Inputs/x.txt");
     x := A**x;
 
     if(det(A) !=0.0)then{
@@ -131,12 +131,3 @@ float insideE2 := E2[0][1];
 float determinant := sqrt(detc);
 exit;
 
-
-
-/*
-
-3 3 [[1.,0.,0.], [0.,1.,0.], [0.,0.,1.]]
-2 2 [[3.,4.],[1.,2.]]
-3 [9.,9.,9.]
-
-*/

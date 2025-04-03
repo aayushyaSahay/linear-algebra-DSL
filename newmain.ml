@@ -48,7 +48,7 @@ let () =
   Arg.parse speclist (fun arg -> filename := arg) usage_msg;
   
   (* Open output file *)
-  let output_channel = open_out "./test1_output.txt" in
+  let output_channel = open_out "./output.txt" in
   
   if !file_input then
     begin

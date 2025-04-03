@@ -1,0 +1,142 @@
+{
+    fmatrix A := create_fmat(3,3);
+    Input(A);
+    fmatrix inverseA := create_fmat(3,3);
+
+    if(det(A) != 0.0)then{
+        fmatrix cofactor_matrix := create_fmat(3,3);
+        for(int i := 0; i < 3; i := i+1;){
+            for(int j := 0; j < 3; j := j +1;){
+                fmatrix minormat := minor(A,i,j);
+                Print("minormat = ");
+                Print(minormat);
+                // a problem with exponentiation in the following line
+                float minus_one := 1.0;
+                for(int k := 0; k < (i+j); k := k+1;){
+                    minus_one := minus_one * -1.0;
+                }
+                cofactor_matrix[i][j] := minus_one*det(minormat);
+            }
+        }
+        fmatrix adjoint_of_matrix := trans(cofactor_matrix);
+        inverseA := (1.0/det(A))*adjoint_of_matrix;
+        Print("inverseA = ");
+        Print(inverseA);
+    }else{
+        Print("Matrix Invertible");
+        exit;
+    }
+
+    fmatrix somematr := create_fmat(2,2);
+    Input(somematr);
+    fmatrix inverseB := create_fmat(2,2);
+
+    if(det(somematr) != 0.0)then{
+        fmatrix cofactor_matrix := create_fmat(2,2);
+        for(int i := 0; i < 2; i := i+1;){
+            for(int j := 0; j < 2; j := j +1;){
+                fmatrix minormat := minor(somematr,i,j);
+                Print("minormat = ");
+                Print(minormat);
+                // a problem with exponentiation in the following line
+                float minus_one := 1.0;
+                for(int k := 0; k < (i+j); k := k+1;){
+                    minus_one := minus_one * -1.0;
+                }
+                cofactor_matrix[i][j] := minus_one*det(minormat);
+            }
+        }
+        fmatrix adjoint_of_matrix2 := trans(cofactor_matrix);
+        inverseB := (1.0/det(somematr))*adjoint_of_matrix2;
+        Print("inverseB = ");
+        Print(inverseB);
+    }else{
+        Print("Matrix Invertible");
+        exit;
+    }
+
+    fvector x := create_fvect(3);
+    Input(x);
+    x := A**x;
+
+    if(det(A) !=0.0)then{
+        fmatrix A_inverse := inverse(A);
+        fvector y := A ** x;
+        Print(y);
+    }else{
+        Print("Matrix Invertible");
+        exit;
+    }
+
+    fmatrix mat2 := 2 2 [[1.,2.],[3.,0.]];
+    float trace := mat2[0][0] + mat2[1][1];
+    float detmat2 := det(mat2);
+    Print("detmat2 = ");Print(detmat2);
+    float D := trace*trace - 4.0 * detmat2;
+    if(D >= 0.0)then{
+        float egv1 := (trace + sqrt(D))/2.0;
+        float egv2 := (trace - sqrt(D))/2.0;
+        Print("egv1 = ");Print(egv1);
+        Print("egv2 = ");Print(egv2);
+    }else{
+        Print("ComplexEigenvaluesError");
+        exit;
+    }
+
+    fmatrix vector_sum := 1 3 [[0.,0.,0.]];
+
+    float sumsq := 0.0;
+    for(int i := 0;i < 3;i:=i+1;){
+        for(int j :=0;j<3;j:=j+1;){
+            sumsq := sumsq + A[i][j]*A[i][j];
+        }
+    }
+    float magnitude_of_matrix := sqrt(sumsq);
+    Print("magnitude_of_matrix = ");Print(sumsq);
+
+
+    // doesn't pass: 1e-6
+    float threshold := 1.0e-6;
+    float norm_diff := det(A);
+    // identity matrix, will be the same after exponentiation, so infinite loop
+    /* while(norm_diff > threshold){
+        A := A ** A;
+        norm_diff := det(A) - threshold;
+        Print(norm_diff);
+    }
+    */
+}
+
+imatrix A := 2 2[[1,2],[3,4]];
+imatrix B := 2 2[[1,2],[3,4]];
+imatrix C := A + B;
+fmatrix a := 2 2[[1.,2.],[3.,4.]];
+fmatrix b := 2 2[[1.,2.],[3.,4.]];
+fmatrix c := a + b;
+Print(a);
+Print(b);
+Print(c);
+C := trans(C);
+c := trans(c);
+int detC := det(C);
+float detc := det(c);
+Print(detc);
+
+ivector x := create_ivect(2);
+fvector y := create_fvect(2);
+imatrix E1 := create_imat(2,2);
+fmatrix E2 := create_fmat(2,2);
+E2[0][1] := 1.0;
+float insideE2 := E2[0][1];
+float determinant := sqrt(detc);
+exit;
+
+
+
+/*
+
+3 3 [[1.,0.,0.], [0.,1.,0.], [0.,0.,1.]]
+2 2 [[3.,4.],[1.,2.]]
+3 [9.,9.,9.]
+
+*/
